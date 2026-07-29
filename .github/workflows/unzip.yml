@@ -1,0 +1,30 @@
+name: Unzip and Cleanup
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  unzip-and-cleanup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Unzip the file
+        run: |
+          unzip -o tesla_roadster_2020.zip -d tesla_roadster_2020
+
+      - name: Delete the zip file
+        run: |
+          rm tesla_roadster_2020.zip
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "Unzip tesla_roadster_2020.zip and remove archive" || echo "No changes to commit"
+          git push
